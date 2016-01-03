@@ -1,5 +1,7 @@
 package com.example.comment;
 
+import com.thedeanda.lorem.Lorem;
+import com.thedeanda.lorem.LoremIpsum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,28 +24,26 @@ public class CommentController {
     @Autowired
     CommentRepository repository;
 
+    // 테스트 용도 데이터 생성
     @PostConstruct
     public void addSampleData() {
-        repository.save(new Comment("aaa", "bbb", new Date()));
-        repository.save(new Comment("111", "bbcdb", new Date()));
-        repository.save(new Comment("222", "bbsb", new Date()));
-        repository.save(new Comment("333", "bbsb", new Date()));
-        repository.save(new Comment("444", "baaabb", new Date()));
-        repository.save(new Comment("4442", "baaa2bb", new Date()));
+        Lorem lorem = LoremIpsum.getInstance();
+        for (int idx = 0; idx < 30; idx++)
+            repository.save(new Comment(lorem.getName(), lorem.getWords(4, 10), new Date()));
     }
 
     // /comments?page=1
     @RequestMapping("/comments")
     public String comments(
             Model model,
-            @RequestParam(defaultValue = "0") int page) {
+            @RequestParam(defaultValue = "1") int page) {
 
         Page<Comment> commentPage = repository.findAll(
-                new PageRequest(page, 5, DESC, "id")
+                new PageRequest(page - 1, 5, DESC, "id")
         );
 
         model.addAttribute("totalPageNumber", commentPage.getTotalPages());
-        model.addAttribute("currentPageNumber", commentPage.getNumber());
+        model.addAttribute("currentPageNumber", commentPage.getNumber() + 1);
         model.addAttribute("comments", commentPage.getContent());
 
         return "comment/list";
