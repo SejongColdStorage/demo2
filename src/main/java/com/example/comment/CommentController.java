@@ -46,12 +46,12 @@ public class CommentController {
         model.addAttribute("currentPageNumber", commentPage.getNumber() + 1);
         model.addAttribute("comments", commentPage.getContent());
 
-        return "comment/list";
+        return "page/comment/list";
     }
 
     @RequestMapping(value = "/comment/add", method = GET)
-    public String viewAddComment(Model model) {
-        return "comment/add";
+    public String viewAddComment() {
+        return "page/comment/add";
     }
 
     @RequestMapping(value = "/comment/add", method = POST)
@@ -66,7 +66,7 @@ public class CommentController {
     public String viewModifyComment(@PathVariable Long id, Model model) {
         model.addAttribute("comment", repository.getOne(id));
 
-        return "comment/modify";
+        return "page/comment/modify";
     }
 
     @RequestMapping(value = "/comments/{id}/modify", method = POST)
